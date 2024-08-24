@@ -1,0 +1,14 @@
+void main () {
+    newVar float x;
+    newVar float y;
+    newVar float i;
+
+    x = 5;
+    y = 3;
+    i = 0;
+
+    while(i < 10){
+        x = x + y;
+        i = i + 1;
+    };
+}

@@ -1,0 +1,16 @@
+void main(){
+    newVar x = 1;
+    newvar y = 2;
+
+    if(soma(x, y) & 1) then {
+        printOut false;
+        return;
+    }
+
+    printOut true;
+    return;
+}
+
+fun soma(float x, float y){
+    return x + y;
+}

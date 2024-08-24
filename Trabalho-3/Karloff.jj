@@ -1,0 +1,231 @@
+PARSER_BEGIN(Karloff)
+import java.io.*;
+public class Karloff {
+
+  public static void main(String args[]) throws ParseException,IOException {
+    
+ Karloff analisador = new Karloff(new FileInputStream(args[0]));
+ analisador.Karloff();
+  }
+
+}
+
+PARSER_END(Karloff)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+  <MAIN: "main">
+| <ACHAVES: "{">
+| <FCHAVES: "}">
+| <VOID: "void">
+| <APAR: "(">
+| <FPAR: ")">
+| <VAR: "newVar">
+| <PV: ";">
+| <FLOAT: "float">
+| <ATRIB: "=">
+| <PRINT: "printOut">
+| <IF: "if">
+| <WHILE: "while">
+| <RETURN: "return">
+| <BOOL: "boolean">
+| <PLUS: "+">
+| <MINUS: "-">
+| <MULT: "*">
+| <DIV: "/">
+| <TRUE: "true">
+| <FALSE: "false">
+| <COMP: "==">
+| <OR: "|">
+| <LESSER: "<">
+| <BIGGER: ">">
+| <AND: "&">
+| <THEN: "then">
+| <FUN: "fun">
+| <VIRGULA: ",">
+| <READ: "readInput">
+}
+
+TOKEN :
+{
+  <NUM : (["0"-"9"])+("."(["0"-"9"])?)?("E"("+" | "-")? ["0"-"9"])?>
+ |< ID: ["a"-"z","A"-"Z"](("_")?["a"-"z","A"-"Z","0"-"9"])*>
+
+}
+
+
+void Karloff () :
+{}
+{
+
+Main() (Func())? <EOF> 
+
+}
+
+void Main () :
+{}
+{
+
+ <VOID> <MAIN> <APAR> <FPAR> <ACHAVES> VarDecl() SeqComandos() <FCHAVES> 
+
+}
+
+void VarDecl() :
+{}
+{
+
+ (<VAR> Tipo() <ID> <PV>)*
+}
+
+void Tipo() :
+{}
+{
+
+  <FLOAT>
+| <BOOL>
+| <VOID>
+
+}
+
+void SeqComandos() :
+{}
+{
+
+ (Comando())+
+
+}
+
+void Comando() :
+{}
+{
+   Atribuicao()
+|  Cond()
+|  Loop()
+|  Return()
+|  Print()
+}
+
+void Atribuicao() : 
+{}
+{
+  
+  <ID> (<ATRIB> (Exp() <PV> | <READ> <APAR> <FPAR>) | <APAR> (ListaExp())? <FPAR> <PV>)
+}
+
+
+void Cond() :
+{}
+{
+  <IF> Exp() <THEN> <ACHAVES> SeqComandos() <FCHAVES> <PV>
+}
+
+void Loop() :
+{}
+{
+  <WHILE> Exp() <ACHAVES> SeqComandos() <FCHAVES> <PV>
+}
+
+
+void Return() :
+{}
+{
+  <RETURN> Exp() <PV>
+}
+
+void Print() :
+{}
+{
+  <PRINT> Exp() <PV>
+}
+void Exp() :
+{}
+{
+
+ ExpL() (Op() ExpL())*
+
+}
+
+void ExpL() :
+{}
+{
+   <APAR> Exp() <FPAR>
+ | Fator()
+}
+
+void Fator() :
+{}
+{
+  <ID> (<APAR> (ListaExp())? <FPAR>)?
+ | <NUM> 
+ | <TRUE>
+ | <FALSE>
+}
+
+void Op() :
+{}
+{
+
+   <PLUS>
+ | <MINUS>
+ | <MULT>
+ | <DIV>
+ | <AND>
+ | <OR>
+ | <LESSER>
+ | <BIGGER>
+ | <COMP>
+
+}
+
+void ListaExp() :
+{}
+{
+
+ Exp() (ListaExpL())*
+
+}
+
+void ListaExpL() :
+{}
+{
+  <VIRGULA> Exp()
+}
+
+void ListaArg() :
+{}
+{
+
+ (Tipo() <ID> (ListaArgL())*)
+
+}
+
+void ListaArgL() :
+{}
+{
+  <VIRGULA> Tipo() <ID>
+}
+
+void Func() :
+{}
+{
+
+ (FuncL())+
+
+}
+
+void FuncL() : 
+{}
+{
+  <FUN> Tipo() <ID> <APAR> (ListaArg())? <FPAR> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>
+}
+
+
+
